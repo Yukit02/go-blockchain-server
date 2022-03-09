@@ -72,3 +72,21 @@ func (bc *Blockchain) Mining() bool {
 
 	return true
 }
+
+func (bc *Blockchain) CalcTotalAmount(blockchainAddress string) float32 {
+	var totalAmount float32 = 0.0
+
+	for _, b := range bc.chain {
+		for _, t := range b.Transactions {
+			if blockchainAddress == t.RecipientBlockchainAddress {
+				totalAmount += t.Value
+			}
+
+			if blockchainAddress == t.SenderBlockchainAddress {
+				totalAmount -= t.Value
+			}
+		}
+	}
+
+	return totalAmount
+}
