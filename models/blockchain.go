@@ -17,7 +17,7 @@ func (bc *Blockchain) CreateBlock(nonce int, previousHash [32]byte) *Block {
 func NewBlockchain() *Blockchain {
 	b := &Block{}
 	bc := &Blockchain{}
-	bc.CreateBlock(0, b.Hash())
+	bc.CreateBlock(0, b.ToHash())
 
 	return bc
 }

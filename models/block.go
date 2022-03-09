@@ -17,7 +17,7 @@ func NewBlock(nonce int, previousHash [32]byte, transactions []*Transaction) *Bl
 	return &Block{nonce, previousHash, time.Now().UnixNano(), transactions}
 }
 
-func (b *Block) Hash() [32]byte {
+func (b *Block) ToHash() [32]byte {
 	m, _ := json.Marshal(b)
 
 	return sha256.Sum256([]byte(m))
