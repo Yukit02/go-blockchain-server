@@ -28,8 +28,7 @@ func (bc *Blockchain) CreateBlock(nonce int, previousHash [32]byte) *Block {
 
 func NewBlockchain(blockchainAddress string) *Blockchain {
 	b := &Block{}
-	bc := &Blockchain{}
-	bc.blockchainAddress = blockchainAddress
+	bc := &Blockchain{blockchainAddress: blockchainAddress}
 	bc.CreateBlock(0, b.ToHash())
 
 	return bc
@@ -46,7 +45,7 @@ func (bc *Blockchain) AddTransaction(sender string, recipient string, value floa
 
 func (bc *Blockchain) IsValidProof(nonce int, previousHash [32]byte, transactions []*Transaction, difficulty int) bool {
 	zeros := strings.Repeat("0", difficulty)
-	guessBlock := Block{nonce, previousHash, 0, transactions}
+	guessBlock := Block{Nonce: nonce, PreviousHash: previousHash, Timestamp: 0, Transactions: transactions}
 	guessHashStr := fmt.Sprintf("%x", guessBlock.ToHash())
 
 	return guessHashStr[:difficulty] == zeros

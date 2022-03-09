@@ -7,5 +7,5 @@ type Transaction struct {
 }
 
 func NewTransaction(sender string, recipient string, value float32) *Transaction {
-	return &Transaction{sender, recipient, value}
+	return &Transaction{SenderBlockchainAddress: sender, RecipientBlockchainAddress: recipient, Value: value}
 }

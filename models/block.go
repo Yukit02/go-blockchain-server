@@ -14,7 +14,12 @@ type Block struct {
 }
 
 func NewBlock(nonce int, previousHash [32]byte, transactions []*Transaction) *Block {
-	return &Block{nonce, previousHash, time.Now().UnixNano(), transactions}
+	return &Block{
+		Nonce: nonce,
+		PreviousHash: previousHash,
+		Timestamp:  time.Now().UnixNano(),
+		Transactions: transactions,
+	}
 }
 
 func (b *Block) ToHash() [32]byte {
