@@ -1,1 +1,1 @@
-# go_blockchain_server
+# go-blockchain-server
