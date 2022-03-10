@@ -9,3 +9,11 @@ type Transaction struct {
 func NewTransaction(sender string, recipient string, value float32) *Transaction {
 	return &Transaction{SenderBlockchainAddress: sender, RecipientBlockchainAddress: recipient, Value: value}
 }
+
+func (t *Transaction) IsRecipient(blockchainAddress string) bool {
+	return t.RecipientBlockchainAddress == blockchainAddress
+}
+
+func (t *Transaction) IsSender(blockchainAddress string) bool {
+	return t.SenderBlockchainAddress == blockchainAddress
+}
