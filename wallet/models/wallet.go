@@ -1,10 +1,11 @@
-package models
+package wlmodels
 
 import (
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rand"
 	"crypto/sha256"
+	"fmt"
 	"log"
 
 	"github.com/btcsuite/btcutil/base58"
@@ -18,11 +19,12 @@ type Wallet struct {
 }
 
 // Crete addres referring to the logic of https://en.bitcoin.it/wiki/Technical_background_of_version_1_Bitcoin_addresses
-func NewWallet() *Wallet {
+func NewWallet() (*Wallet, error) {
 		// 1. Creating ECDSA private key (32 bytes) public key (64 bytes)
-		privateKey, e := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
-		if e != nil {
-			log.Fatalln(e)
+		privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+		if err != nil {
+			log.Println(err)
+			return nil, err
 		}
 
 		publicKey := privateKey.PublicKey
@@ -64,5 +66,13 @@ func NewWallet() *Wallet {
 		// 9. Convert the result from a byte string into base58.
 		address := base58.Encode(dc8)
 
-	return &Wallet{PrivateKey: privateKey, PublicKey: &publicKey, BlockchainAdress: address}
+	return &Wallet{PrivateKey: privateKey, PublicKey: &publicKey, BlockchainAdress: address}, nil
+}
+
+func (w *Wallet) PrivateKeyStr() string {
+	return fmt.Sprintf("%x", w.PrivateKey.D.Bytes())
+}
+
+func (w *Wallet) PublickKeyStr() string {
+	return fmt.Sprintf("%x%x", w.PrivateKey.X.Bytes(), w.PublicKey.Y.Bytes())
 }

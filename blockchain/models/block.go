@@ -1,4 +1,4 @@
-package models
+package bcmodels
 
 import (
 	"crypto/sha256"

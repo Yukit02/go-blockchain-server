@@ -1,4 +1,4 @@
-package models
+package bcmodels
 
 type Transaction struct {
 	SenderBlockchainAddress string `json:"sender_blockchain_address"`
