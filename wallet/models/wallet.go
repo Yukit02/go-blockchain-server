@@ -15,7 +15,7 @@ import (
 type Wallet struct {
 	PrivateKey *ecdsa.PrivateKey
 	PublicKey *ecdsa.PublicKey
-	BlockchainAdress string
+	BlockchainAddress string
 }
 
 // Crete addres referring to the logic of https://en.bitcoin.it/wiki/Technical_background_of_version_1_Bitcoin_addresses
@@ -66,7 +66,7 @@ func NewWallet() (*Wallet, error) {
 		// 9. Convert the result from a byte string into base58.
 		address := base58.Encode(dc8)
 
-	return &Wallet{PrivateKey: privateKey, PublicKey: &publicKey, BlockchainAdress: address}, nil
+	return &Wallet{PrivateKey: privateKey, PublicKey: &publicKey, BlockchainAddress: address}, nil
 }
 
 func (w *Wallet) PrivateKeyStr() string {
