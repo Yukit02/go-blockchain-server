@@ -1,7 +1,12 @@
 package bcmodels
 
 import (
+	"bcserver/utils"
+	"crypto/ecdsa"
+	"crypto/sha256"
+	"encoding/json"
 	"fmt"
+	"log"
 	"strings"
 )
 
@@ -38,9 +43,36 @@ func (bc *Blockchain) LastBlock() *Block {
 	return bc.chain[len(bc.chain) - 1]
 }
 
-func (bc *Blockchain) AddTransaction(sender string, recipient string, value float32) {
-	t := NewTransaction(sender, recipient, value)
-	bc.transactionPool = append(bc.transactionPool, t)
+func (bc *Blockchain) AddTransaction(senderAddress string, recipientAddress string, value float32, senderPublicKey *ecdsa.PublicKey, s *utils.Signature) bool {
+	t := NewTransaction(senderAddress, recipientAddress, value)
+
+	if senderAddress == MINING_SENDER {
+		bc.transactionPool = append(bc.transactionPool, t)
+		return true
+	}
+
+	if bc.VerifyTransactionSignaure(senderPublicKey, s, t) {
+		if bc.CalcTotalAmount(senderAddress) < value {
+			log.Println("Not enough balance in a wallet")
+			return false
+		}
+
+		bc.transactionPool = append(bc.transactionPool, t)
+		return true
+	}
+
+	return false
+}
+
+func (bc *Blockchain) VerifyTransactionSignaure(SenderPublicKey *ecdsa.PublicKey, s *utils.Signature, t *Transaction) bool {
+	m, err := json.Marshal(t)
+	if err != nil {
+		log.Printf("%x", err)
+	}
+
+	h := sha256.Sum256(m)
+
+	return ecdsa.Verify(SenderPublicKey, h[:], s.R, s.S)
 }
 
 func (bc *Blockchain) IsValidProof(nonce int, previousHash [32]byte, transactions []*Transaction, difficulty int) bool {
@@ -63,7 +95,7 @@ func (bc *Blockchain) ProofOfWork() int {
 }
 
 func (bc *Blockchain) Mining() bool {
-	bc.AddTransaction(MINING_SENDER, bc.blockchainAddress, MINING_REWARD)
+	bc.AddTransaction(MINING_SENDER, bc.blockchainAddress, MINING_REWARD, nil, nil)
 
 	nonce := bc.ProofOfWork()
 	previousHash := bc.LastBlock().ToHash()
