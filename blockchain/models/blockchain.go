@@ -121,3 +121,13 @@ func (bc *Blockchain) CalcTotalAmount(blockchainAddress string) float32 {
 
 	return totalAmount
 }
+
+// TODO: remove
+func (bc *Blockchain) Print() {
+	for i, block := range bc.chain {
+		fmt.Printf("%s Chain %d %s\n", strings.Repeat("=", 25), i,
+			strings.Repeat("=", 25))
+		block.Print()
+	}
+	fmt.Printf("%s\n", strings.Repeat("*", 25))
+}

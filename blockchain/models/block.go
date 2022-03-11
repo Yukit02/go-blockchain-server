@@ -3,6 +3,7 @@ package bcmodels
 import (
 	"crypto/sha256"
 	"encoding/json"
+	"fmt"
 	"time"
 )
 
@@ -26,4 +27,14 @@ func (b *Block) ToHash() [32]byte {
 	m, _ := json.Marshal(b)
 
 	return sha256.Sum256([]byte(m))
+}
+
+// TODO: remove
+func (b *Block) Print() {
+	fmt.Printf("timestamp       %d\n", b.Timestamp)
+	fmt.Printf("nonce           %d\n", b.Nonce)
+	fmt.Printf("previous_hash   %x\n", b.PreviousHash)
+	for _, t := range b.Transactions {
+		t.Print()
+	}
 }
