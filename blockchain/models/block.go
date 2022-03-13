@@ -8,10 +8,10 @@ import (
 )
 
 type Block struct {
-	Nonce int `json:"nonce"`
-	PreviousHash [32]byte `json:"previous_hash"`
-	Timestamp int64 `json:"timestamp"`
-	Transactions []*Transaction `json:"transactions"`
+	Nonce int
+	PreviousHash [32]byte
+	Timestamp int64
+	Transactions []*Transaction
 }
 
 func NewBlock(nonce int, previousHash [32]byte, transactions []*Transaction) *Block {
@@ -21,6 +21,20 @@ func NewBlock(nonce int, previousHash [32]byte, transactions []*Transaction) *Bl
 		Timestamp:  time.Now().UnixNano(),
 		Transactions: transactions,
 	}
+}
+
+func (b *Block) MarshalJSON() ([]byte, error) {
+	return json.Marshal(struct {
+		Timestamp int64 `json:"timestamp"`
+		Nonce int `json:"nonce"`
+		PreviousHash string `json:"previous_hash"`
+		Transactions []*Transaction `json:"transactions"`
+	}{
+		Timestamp: b.Timestamp,
+		Nonce: b.Nonce,
+		PreviousHash: fmt.Sprintf("%x", b.PreviousHash),
+		Transactions: b.Transactions,
+	})
 }
 
 func (b *Block) ToHash() [32]byte {
