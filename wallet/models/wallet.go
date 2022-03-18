@@ -5,6 +5,7 @@ import (
 	"crypto/elliptic"
 	"crypto/rand"
 	"crypto/sha256"
+	"encoding/json"
 	"fmt"
 	"log"
 
@@ -16,6 +17,18 @@ type Wallet struct {
 	PrivateKey *ecdsa.PrivateKey
 	PublicKey *ecdsa.PublicKey
 	BlockchainAddress string
+}
+
+func (w *Wallet) MarshalJSON() ([]byte, error) {
+	return json.Marshal(struct {
+		PrivateKey string `json:"private_key"`
+		PublicKey string `json:"public_key"`
+		BlockchainAddress string `json:"blockchain_address"`
+	}{
+		PrivateKey: w.PrivateKeyStr(),
+		PublicKey: w.PublickKeyStr(),
+		BlockchainAddress: w.BlockchainAddress,
+	})
 }
 
 // Crete addres referring to the logic of https://en.bitcoin.it/wiki/Technical_background_of_version_1_Bitcoin_addresses
