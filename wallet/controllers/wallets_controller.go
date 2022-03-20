@@ -28,6 +28,10 @@ func (ws *WalletServer) Index(w http.ResponseWriter, req *http.Request) {
 }
 
 func (ws *WalletServer) Wallet(w http.ResponseWriter, req *http.Request) {
+	w.Header().Set("Access-Control-Allow-Headers", "*")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods","GET, POST, PUT, DELETE, OPTIONS" )
+
 	switch req.Method {
 	case http.MethodPost:
 		w.Header().Add("Content-Type", "spplication/json")
@@ -50,6 +54,6 @@ func (ws *WalletServer) Wallet(w http.ResponseWriter, req *http.Request) {
 
 func (ws *WalletServer) Run() {
 	http.HandleFunc("/", ws.Index)
-	http.HandleFunc("/", ws.Wallet)
+	http.HandleFunc("/wallet", ws.Wallet)
 	log.Fatal(http.ListenAndServe("0.0.0.0:"+ strconv.Itoa(int(ws.Port)), nil))
 }
